@@ -54,9 +54,26 @@ val y = when {
 ---
 ## 예외
 - 코틀린에는 확인된 예외(Checked Exception)가 존재하지 않는다.
-- 코틀린의 throw 구문은 표현식이기 때문에 객체의 값이 null인 경우 예외를 던지는 코드를 다음과 같이 사용할 수 있다.
+- 코틀린의 throw 구문은 표현식이기 때문에 객체의 값이 null인 경우 예외를 던지는 코드[엘비스 연산자(?:)]를 다음과 같이 사용할 수 있다.
 ```
 val s = person.name ?: throw IllegalArgumentException("Name required")
 ```
+---
+## 널 안정성
+- 코틀린의 타입 시스템은 널(null)값을 가진 객체의 위험을 제거하기 위해 설계되었다.
+- 널값을 가질 수 있는 변수의 자체 메서드에 접근할 수 있는 방법은 다음과 같이 제공된다.
+```
+1. if문으로 널체크
+    val b: String? = makeSomeString()
+    val l = if(b != null) b.length else -1
 
+2. 세이프콜(Safe call)
+    val b: String? = makeSomeString()
+    val l = b?.length // 이 경우 l의 타입은 널을 가질 수 있는 Int?가 됨
 
+3. 엘비스 연산자
+    val b: String? = makeSomeString()
+    val l = b?.length ?: -1 // l의 타입은 Int
+```
+- !! 연산자는 널값을 가질 수 있는 타입의 객체를 강제로 널값을 가질 수 없는 타입으로 변환해준다. 만약 그 객체의 값이 널이라면 NullPointerException 발생
+---
